@@ -1,4 +1,5 @@
 import express from 'express';
+import { PORT } from './lib/env.js';
 
 const app = express();
 
@@ -6,5 +7,5 @@ app.get('/', (_req, res, _next) => {
   res.send('Working');
 });
 
-console.log('Server is listening on port 25401');
-app.listen(25401);
+console.log(`Server is listening on port ${PORT}`);
+app.listen(PORT);

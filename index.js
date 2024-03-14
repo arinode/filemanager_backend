@@ -3,6 +3,11 @@ import { PORT } from './lib/index.js';
 
 const app = express();
 
+app.use((_req, res, next) => {
+  res.set('Content-Security-Policy', "default-src 'self'");
+  next();
+});
+
 app.get('/', (_req, res, _next) => {
   res.send('Working');
 });

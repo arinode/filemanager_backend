@@ -1,9 +1,9 @@
 import express from 'express';
-import { resolvePath } from '../lib/index.js';
+import { readDirAsEntryMetadata, resolvePath } from '../lib/index.js';
 
 const router = express.Router();
 
-router.get('*', (req, res) => {
+router.get('*', async (req, res) => {
   if (req.query.type === undefined) {
     req.query.type = 'file';
   }
@@ -11,6 +11,13 @@ router.get('*', (req, res) => {
   if (req.query.type === 'file') {
     const absolutePath = resolvePath(req.path);
     res.sendFile(absolutePath, { etag: false });
+    return;
+  }
+
+  if (req.query.type === 'dir') {
+    const absolutePath = resolvePath(req.path);
+    const metadata = await readDirAsEntryMetadata(absolutePath);
+    res.send(metadata);
     return;
   }
 

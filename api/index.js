@@ -9,4 +9,8 @@ router.get('/', (_req, res) => {
 
 router.use('/entries', entriesRouter);
 
+router.use((err, _req, res, _next) => {
+  res.status(500).json({ error: err.message });
+});
+
 export { router };

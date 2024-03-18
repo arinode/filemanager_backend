@@ -3,7 +3,7 @@ import { readDirAsEntryMetadata, resolvePath } from '../lib/index.js';
 
 const router = express.Router();
 
-router.get('*', async (req, res) => {
+const handleGet = async (req, res) => {
   if (req.query.type === undefined) {
     req.query.type = 'file';
   }
@@ -22,6 +22,10 @@ router.get('*', async (req, res) => {
   }
 
   throw new Error(`invalid type: ${req.query.type}`);
+};
+
+router.get('*', (req, res, next) => {
+  handleGet(req, res).catch(next);
 });
 
 export default router;

@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'node:fs/promises';
 import { readDirAsEntryMetadata, resolvePath } from '../lib/index.js';
 
 const router = express.Router();
@@ -10,6 +11,11 @@ const handleGet = async (req, res) => {
 
   if (req.query.type === 'file') {
     const absolutePath = resolvePath(req.path);
+
+    if (!(await fs.stat(absolutePath)).isFile()) {
+      throw new Error('entry is not a file');
+    }
+
     res.sendFile(absolutePath, { etag: false });
     return;
   }

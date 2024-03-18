@@ -6,7 +6,7 @@ A parameter name wrapped in square brackets indicates that it's an optional para
 | HTTP Method | URI Parameters              | Request Headers | Response Headers         | Request Body | Response Body        | Description                                             | 
 |-------------|-----------------------------|-----------------|--------------------------|--------------|----------------------|---------------------------------------------------------|
 | HEAD        |                             |                 | EntryMetadata as headers |              |                      | Returns file system metadata for an entry.              |
-| GET         |                             | [Content-Range] |                          |              |                      | Returns bytes of a file.                                |
+| GET         |                             | [Range]         |                          |              |                      | Returns bytes of a file.                                |
 | GET         | type=dir, [cursor], [limit] | [If-Match]      | [ETag]                   |              | JSON EntryMetadata[] | Returns a list of entries in a directory.               |
 | PUT         | [type]                      |                 |                          |              |                      | Creates an empty entry.                                 |
 | PUT         | type=file                   |                 |                          | Bytes        |                      | Uploads a file.                                         |

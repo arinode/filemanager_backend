@@ -1,9 +1,12 @@
 import express from 'express';
+import entriesRouter from './entries.js';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
   res.send('working api');
 });
+
+router.use('/entries', entriesRouter);
 
 export { router };

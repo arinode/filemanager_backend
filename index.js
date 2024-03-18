@@ -4,6 +4,8 @@ import * as api from './api/index.js';
 
 const app = express();
 
+app.set('etag', false);
+
 app.use((_req, res, next) => {
   res.set('Content-Security-Policy', "default-src 'self'");
   next();

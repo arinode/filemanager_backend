@@ -3,14 +3,17 @@ import { getOrGeneratePreview, resolvePath } from '../lib/index.js';
 
 const router = express.Router();
 
-const handleGet = async (req, res) => {
-  const absolutePath = resolvePath(req.path);
-  const previewPath = await getOrGeneratePreview(absolutePath);
-  res.sendFile(previewPath, { etag: false });
+const handleGet = (relativeURL) => {
+  const absolutePath = resolvePath(relativeURL);
+  return getOrGeneratePreview(absolutePath);
 };
 
 router.get('*', (req, res, next) => {
-  handleGet(req, res).catch(next);
+  handleGet(req.path)
+    .then((previewPath) => {
+      res.sendFile(previewPath, { etag: false });
+    })
+    .catch(next);
 });
 
 export default router;

@@ -1,5 +1,6 @@
 import express from 'express';
 import entriesRouter from './entries.js';
+import previewsRouter from './previews.js';
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ router.get('/', (_req, res) => {
 });
 
 router.use('/entries', entriesRouter);
+router.use('/previews', previewsRouter);
 
 router.use((err, _req, res, _next) => {
   res.status(500).json({ error: err.message });

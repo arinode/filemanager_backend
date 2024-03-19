@@ -2,7 +2,6 @@ import express from 'express';
 import fs from 'node:fs/promises';
 import {
   EntryMetadata,
-  getOrGeneratePreview,
   readDirAsEntryMetadata,
   resolvePath,
 } from '../lib/index.js';
@@ -28,12 +27,6 @@ const handleGet = async (req, res) => {
   if (req.query.type === 'dir') {
     const metadata = await readDirAsEntryMetadata(absolutePath);
     res.send(metadata);
-    return;
-  }
-
-  if (req.query.type === 'preview') {
-    const previewPath = await getOrGeneratePreview(absolutePath);
-    res.sendFile(previewPath, { etag: false });
     return;
   }
 

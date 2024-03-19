@@ -1,6 +1,7 @@
 import express from 'express';
 import fs from 'node:fs/promises';
 import {
+  EntryKind,
   EntryMetadata,
   readDirAsEntryMetadata,
   resolvePath,
@@ -9,15 +10,18 @@ import {
 const router = express.Router();
 
 const handleGet = async (req, res) => {
-  req.query.type ??= 'file';
-
   const absolutePath = resolvePath(req.path);
+  const actualType = (await EntryKind.fromFile(absolutePath)).toString();
+
+  req.query.type ??= actualType;
+
+  if (req.query.type !== actualType) {
+    throw new Error(
+      `invalid type, received: ${req.query.type}, while entry is: ${actualType}`,
+    );
+  }
 
   if (req.query.type === 'file') {
-    if (!(await fs.stat(absolutePath)).isFile()) {
-      throw new Error('entry is not a file');
-    }
-
     res.sendFile(absolutePath, { etag: false });
     return;
   }

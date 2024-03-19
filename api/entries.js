@@ -14,9 +14,9 @@ const handleGet = async (req, res) => {
     req.query.type = 'file';
   }
 
-  if (req.query.type === 'file') {
-    const absolutePath = resolvePath(req.path);
+  const absolutePath = resolvePath(req.path);
 
+  if (req.query.type === 'file') {
     if (!(await fs.stat(absolutePath)).isFile()) {
       throw new Error('entry is not a file');
     }
@@ -26,14 +26,12 @@ const handleGet = async (req, res) => {
   }
 
   if (req.query.type === 'dir') {
-    const absolutePath = resolvePath(req.path);
     const metadata = await readDirAsEntryMetadata(absolutePath);
     res.send(metadata);
     return;
   }
 
   if (req.query.type === 'preview') {
-    const absolutePath = resolvePath(req.path);
     const previewPath = await getOrGeneratePreview(absolutePath);
     res.sendFile(previewPath, { etag: false });
     return;

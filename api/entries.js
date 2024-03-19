@@ -9,9 +9,7 @@ import {
 const router = express.Router();
 
 const handleGet = async (req, res) => {
-  if (req.query.type === undefined) {
-    req.query.type = 'file';
-  }
+  req.query.type ??= 'file';
 
   const absolutePath = resolvePath(req.path);
 

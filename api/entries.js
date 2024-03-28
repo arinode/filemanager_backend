@@ -1,9 +1,8 @@
 import express from 'express';
-import fs from 'node:fs/promises';
 import {
+  EntryChildren,
   EntryKind,
   EntryMetadata,
-  readDirAsEntryMetadata,
   resolvePath,
 } from '../lib/index.js';
 
@@ -27,8 +26,8 @@ const handleGet = async (req, res) => {
   }
 
   if (req.query.type === 'dir') {
-    const metadata = await readDirAsEntryMetadata(absolutePath);
-    res.send(metadata);
+    const children = await EntryChildren.fromDir(absolutePath);
+    res.send(children);
     return;
   }
 

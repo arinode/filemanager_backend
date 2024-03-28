@@ -3,6 +3,7 @@ import {
   EntryChildren,
   EntryKind,
   EntryMetadata,
+  getOrGeneratePreview,
   resolvePath,
 } from '../lib/index.js';
 
@@ -44,7 +45,9 @@ const handleGet = async (req, res) => {
   }
 
   if (req.query.alt === 'thumb') {
-    throw new Error('todo');
+    const previewPath = await getOrGeneratePreview(absolutePath);
+    res.sendFile(previewPath, { etag: false });
+    return;
   }
 
   throw new Error(

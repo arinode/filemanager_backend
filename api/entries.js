@@ -10,28 +10,46 @@ const router = express.Router();
 
 const handleGet = async (req, res) => {
   const absolutePath = resolvePath(req.path);
-  const actualType = (await EntryKind.fromFile(absolutePath)).toString();
+  const kind = await EntryKind.fromFile(absolutePath);
 
-  req.query.type ??= actualType;
+  req.query.alt ??= 'metadata';
 
-  if (req.query.type !== actualType) {
-    throw new Error(
-      `invalid type, received: ${req.query.type}, while entry is: ${actualType}`,
-    );
+  if (req.query.alt == 'metadata') {
+    const metadata = await EntryMetadata.fromPath(absolutePath);
+    res.send(metadata);
+    return;
   }
 
-  if (req.query.type === 'file') {
+  if (req.query.alt === 'raw') {
+    if (kind !== EntryKind.File) {
+      throw new Error(
+        `alt=raw works only with files`,
+      );
+    }
+
     res.sendFile(absolutePath, { etag: false });
     return;
   }
 
-  if (req.query.type === 'dir') {
+  if (req.query.alt === 'children') {
+    if (kind !== EntryKind.Dir) {
+      throw new Error(
+        `alt=raw works only with directories`,
+      );
+    }
+
     const children = await EntryChildren.fromDir(absolutePath);
     res.send(children);
     return;
   }
 
-  throw new Error(`invalid type: ${req.query.type}`);
+  if (req.query.alt === 'thumb') {
+    throw new Error('todo');
+  }
+
+  throw new Error(
+    `invalid alt: ${req.query.alt} | valid values are: metadata, children, raw, thumb`,
+  );
 };
 
 const handleHead = async (req, res) => {

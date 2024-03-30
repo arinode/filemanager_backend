@@ -59,6 +59,12 @@ const handleHead = async (req, res) => {
   const absolutePath = resolvePath(req.path);
   const metadata = await EntryMetadata.fromPath(absolutePath);
 
+  res.type('application/octet-stream');
+
+  if (metadata.mediaType !== null) {
+    res.type(metadata.mediaType);
+  }
+
   res.set('x-ar-basename', encodeURIComponent(metadata.basename));
   res.set('x-ar-kind', metadata.kind.toString());
   res.set('x-ar-size', metadata.size);

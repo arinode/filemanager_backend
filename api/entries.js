@@ -3,10 +3,9 @@ import {
   EntryChildren,
   EntryKind,
   EntryMetadata,
-  getOrGenerateCover,
-  getOrGenerateThumbnail,
   resolvePath,
 } from '../lib/index.js';
+import { getOrGeneratePreview } from '../lib/preview_gen/get_or_generate_preview.js';
 
 const router = express.Router();
 
@@ -45,15 +44,9 @@ const handleGet = async (req, res) => {
     return;
   }
 
-  if (req.query.alt === 'thumb') {
-    const previewPath = await getOrGenerateThumbnail(absolutePath);
+  if (req.query.alt === 'thumb' || req.query.alt === 'cover') {
+    const previewPath = await getOrGeneratePreview(absolutePath, req.query.alt);
     res.sendFile(previewPath, { etag: false });
-    return;
-  }
-
-  if (req.query.alt === 'cover') {
-    const coverPath = await getOrGenerateCover(absolutePath);
-    res.sendFile(coverPath, { etag: false });
     return;
   }
 

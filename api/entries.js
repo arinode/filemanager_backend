@@ -3,6 +3,7 @@ import {
   EntryChildren,
   EntryKind,
   EntryMetadata,
+  getOrGenerateCover,
   getOrGenerateThumbnail,
   resolvePath,
 } from '../lib/index.js';
@@ -47,6 +48,12 @@ const handleGet = async (req, res) => {
   if (req.query.alt === 'thumb') {
     const previewPath = await getOrGenerateThumbnail(absolutePath);
     res.sendFile(previewPath, { etag: false });
+    return;
+  }
+
+  if (req.query.alt === 'cover') {
+    const coverPath = await getOrGenerateCover(absolutePath);
+    res.sendFile(coverPath, { etag: false });
     return;
   }
 
